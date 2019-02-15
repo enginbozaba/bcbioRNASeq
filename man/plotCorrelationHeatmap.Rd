@@ -26,7 +26,7 @@
 \item{...}{Passthrough arguments to \code{SummarizedExperiment} method.}
 }
 \value{
-Show heatmap and invisibly return a \code{list} of the components.
+\code{pheatmap}.
 }
 \description{
 This function calculates a correlation matrix based on feature expression per
