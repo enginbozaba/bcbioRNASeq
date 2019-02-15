@@ -50,14 +50,7 @@ NULL
 
 
 
-#' @rdname plotDEGHeatmap
-#' @export
-setMethod(
-    "plotDEGHeatmap",
-    signature(
-        results = "DESeqResults",
-        counts = "SummarizedExperiment"
-    ),
+plotDEGHeatmap.DESeqResults.SummarizedExperiment <-  # nolint
     function(
         results,
         counts,
@@ -68,7 +61,7 @@ setMethod(
     ) {
         validObject(results)
         validObject(counts)
-        # Coerce to RSE then SE to preserve rowData
+        # Coerce to RSE then SE to preserve rowData.
         if (is(counts, "RangedSummarizedExperiment")) {
             counts <- as(counts, "RangedSummarizedExperiment")
         }
@@ -90,34 +83,35 @@ setMethod(
 
         deg <- significants(results, padj = alpha, fc = lfcThreshold)
 
-        # Early return if there are no DEGs
+        # Early return if there are no DEGs.
         if (!length(deg)) {
             warning("No significant DEGs to plot")
             return(invisible())
         }
 
-        # Subset the counts to only contain DEGs
+        # Subset the counts to only contain DEGs.
         counts <- counts[deg, , drop = FALSE]
 
-        # SummarizedExperiment method
-        plotHeatmap(
-            object = counts,
-            title = title,
-            ...
-        )
+        # Using SummarizedExperiment method here.
+        plotHeatmap(object = counts, title = title, ...)
     }
-)
 
 
 
 #' @rdname plotDEGHeatmap
 #' @export
 setMethod(
-    "plotDEGHeatmap",
-    signature(
+    f = "plotDEGHeatmap",
+    signature = signature(
         results = "DESeqResults",
-        counts = "bcbioRNASeq"
+        counts = "SummarizedExperiment"
     ),
+    definition = plotDEGHeatmap.DESeqResults.SummarizedExperiment
+)
+
+
+
+plotDEGHeatmap.DESeqResults.bcbioRNASeq <-  # nolint
     function(
         results,
         counts,
@@ -129,39 +123,44 @@ setMethod(
         message(paste("Using", normalized, "counts"))
         rse <- as(counts, "RangedSummarizedExperiment")
         assays(rse) <- list(counts = counts(counts, normalized = normalized))
-        plotDEGHeatmap(
-            results = results,
-            counts = rse,
-            ...
-        )
+        plotDEGHeatmap(results = results, counts = rse, ...)
     }
-)
 
 
 
 #' @rdname plotDEGHeatmap
 #' @export
 setMethod(
-    "plotDEGHeatmap",
-    signature(
+    f = "plotDEGHeatmap",
+    signature = signature(
         results = "DESeqResults",
-        counts = "DESeqDataSet"
+        counts = "bcbioRNASeq"
     ),
-    function(
-        results,
-        counts,
-        ...
-    ) {
+    definition = plotDEGHeatmap.DESeqResults.bcbioRNASeq
+)
+
+
+
+plotDEGHeatmap.DESeqResults.DESeqDataSet <-  # nolint
+    function(results, counts, ...) {
         validObject(counts)
         message("Using normalized counts")
         rse <- as(counts, "RangedSummarizedExperiment")
         assays(rse) <- list(counts = counts(counts, normalized = TRUE))
-        plotDEGHeatmap(
-            results = results,
-            counts = rse,
-            ...
-        )
+        plotDEGHeatmap(results = results, counts = rse, ...)
     }
+
+
+
+#' @rdname plotDEGHeatmap
+#' @export
+setMethod(
+    f = "plotDEGHeatmap",
+    signature = signature(
+        results = "DESeqResults",
+        counts = "DESeqDataSet"
+    ),
+    definition = plotDEGHeatmap.DESeqResults.DESeqDataSet
 )
 
 
@@ -169,16 +168,10 @@ setMethod(
 #' @rdname plotDEGHeatmap
 #' @export
 setMethod(
-    "plotDEGHeatmap",
-    signature(
+    f = "plotDEGHeatmap",
+    signature = signature(
         results = "DESeqResults",
         counts = "DESeqTransform"
     ),
-    getMethod(
-        "plotDEGHeatmap",
-        signature(
-            results = "DESeqResults",
-            counts = "SummarizedExperiment"
-        )
-    )
+    definition = plotDEGHeatmap.DESeqResults.SummarizedExperiment
 )
