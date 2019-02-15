@@ -400,19 +400,24 @@ bcbioRNASeq <- function(
         rowRanges <- makeGRangesFromGFF(gffFile)
     } else if (is_a_string(organism)) {
         message("Using `makeGRangesFromEnsembl()` for annotations")
-        # ah: AnnotationHub
-        ah <- makeGRangesFromEnsembl(
+        # Note that genome metadata is now stashed in `metadata()` of GRanges.
+        # Previously, `makeGRangesFromEnsembl()` supported a `metadata = TRUE`
+        # argument, which would return as a list.
+        #
+        # We're still stashing this in the `rowRangesMetadata` slot for
+        # backward compatibility with the current bcbioRNASeq code base.
+        # This convention has changed in the bcbioRNASeq v3 release.
+        rowRanges <- makeGRangesFromEnsembl(
             organism = organism,
-            format = level,
+            level = level,
             genomeBuild = genomeBuild,
-            release = ensemblRelease,
-            metadata = TRUE
+            release = ensemblRelease
         )
-        assert_is_list(ah)
-        assert_are_identical(names(ah), c("data", "metadata"))
-        rowRanges <- ah[["data"]]
         assert_is_all_of(rowRanges, "GRanges")
-        rowRangesMetadata <- ah[["metadata"]]
+        # Note that this code has changed with basejump v0.9 release.
+        # The return is essentially the same. We've just slotted this inside
+        # the GRanges object instead of returning in a list.
+        rowRangesMetadata <- metadata(rowRanges)[["ensembldb"]]
         assert_is_data.frame(rowRangesMetadata)
         genomeBuild <- rowRangesMetadata %>%
             filter(!!sym("name") == "genome_build") %>%
