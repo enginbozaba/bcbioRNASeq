@@ -27,14 +27,7 @@ NULL
 
 
 
-#' @rdname plotDEGPCA
-#' @export
-setMethod(
-    "plotDEGPCA",
-    signature(
-        results = "DESeqResults",
-        counts = "SummarizedExperiment"
-    ),
+plotDEGPCA.DESeqResults.SummarizedExperiment <-  # nolint
     function(
         results,
         counts,
@@ -63,7 +56,7 @@ setMethod(
         assert_is_a_bool(label)
         return <- match.arg(return)
 
-        # Get DEG vector using DEGreport
+        # Get DEG vector using DEGreport.
         if (direction == "both") {
             direction <- NULL
         }
@@ -74,16 +67,16 @@ setMethod(
             direction = direction
         )
 
-        # Early return if there are no DEGs
+        # Early return if there are no DEGs.
         if (!length(deg)) {
             warning("No significant DEGs to plot")
             return(invisible())
         }
 
-        # Subset the counts
+        # Subset the counts.
         counts <- counts[deg, , drop = FALSE]
 
-        # SummarizedExperiment method
+        # Using SummarizedExperiment method.
         rse <- as(counts, "RangedSummarizedExperiment")
         plotPCA(
             object = rse,
@@ -95,18 +88,23 @@ setMethod(
             return = return
         )
     }
-)
 
 
 
 #' @rdname plotDEGPCA
 #' @export
 setMethod(
-    "plotDEGPCA",
-    signature(
+    f = "plotDEGPCA",
+    signature = signature(
         results = "DESeqResults",
-        counts = "bcbioRNASeq"
+        counts = "SummarizedExperiment"
     ),
+    definition = plotDEGPCA.DESeqResults.SummarizedExperiment
+)
+
+
+
+plotDEGPCA.DESeqResults.bcbioRNASeq <-  # nolint
     function(
         results,
         counts,
@@ -124,18 +122,23 @@ setMethod(
             ...
         )
     }
-)
 
 
 
 #' @rdname plotDEGPCA
 #' @export
 setMethod(
-    "plotDEGPCA",
-    signature(
+    f = "plotDEGPCA",
+    signature = signature(
         results = "DESeqResults",
-        counts = "DESeqDataSet"
+        counts = "bcbioRNASeq"
     ),
+    definition = plotDEGPCA.DESeqResults.bcbioRNASeq
+)
+
+
+
+plotDEGPCA.DESeqResults.DESeqDataSet <-  # nolint
     function(
         results,
         counts,
@@ -151,6 +154,18 @@ setMethod(
             ...
         )
     }
+
+
+
+#' @rdname plotDEGPCA
+#' @export
+setMethod(
+    f = "plotDEGPCA",
+    signature = signature(
+        results = "DESeqResults",
+        counts = "DESeqDataSet"
+    ),
+    definition = plotDEGPCA.DESeqResults.DESeqDataSet
 )
 
 
@@ -158,16 +173,10 @@ setMethod(
 #' @rdname plotDEGPCA
 #' @export
 setMethod(
-    "plotDEGPCA",
-    signature(
+    f = "plotDEGPCA",
+    signature = signature(
         results = "DESeqResults",
         counts = "DESeqTransform"
     ),
-    getMethod(
-        "plotDEGPCA",
-        signature(
-            results = "DESeqResults",
-            counts = "SummarizedExperiment"
-        )
-    )
+    definition = plotDEGPCA.DESeqResults.SummarizedExperiment
 )
