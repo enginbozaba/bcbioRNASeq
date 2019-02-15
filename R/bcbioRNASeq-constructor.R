@@ -404,7 +404,7 @@ bcbioRNASeq <- function(
         ah <- makeGRangesFromEnsembl(
             organism = organism,
             format = level,
-            build = genomeBuild,
+            genomeBuild = genomeBuild,
             release = ensemblRelease,
             metadata = TRUE
         )
