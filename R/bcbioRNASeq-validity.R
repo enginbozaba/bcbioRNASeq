@@ -80,6 +80,12 @@ setValidity(
         # v0.2.6: countsFromAbundance is now optional, since we're supporting
         # featureCounts aligned counts
 
+        # Note that `basejump::makeSummarizedExperiment()` previously returned
+        # `devtoolsSessionInfo` and `utilsSessionInfo`. This has been simplified
+        # to return only `sessionInfo` in the v0.9 release series.
+        # Checking for `sessionInfo` will be added back in the bcbioRNASeq v3
+        # release update.
+
         # Class checks (order independent)
         requiredMetadata <- list(
             allSamples = "logical",
@@ -87,7 +93,7 @@ setValidity(
             bcbioLog = "character",
             caller = "character",
             date = "Date",
-            devtoolsSessionInfo = "session_info",
+            # devtoolsSessionInfo = "session_info",
             ensemblRelease = "integer",
             genomeBuild = "character",
             gffFile = "character",
@@ -103,7 +109,7 @@ setValidity(
             template = "character",
             tx2gene = "data.frame",
             uploadDir = "character",
-            utilsSessionInfo = "sessionInfo",
+            # utilsSessionInfo = "sessionInfo",
             version = "package_version",
             wd = "character",
             yaml = "list"
