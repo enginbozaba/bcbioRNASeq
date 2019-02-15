@@ -42,9 +42,6 @@ res_tbl <- resultsTables(
 )
 topTables(res_tbl, n = 5L)
 }
-\seealso{
-Other R Markdown Functions: \code{\link{prepareRNASeqTemplate}}
-}
 \author{
 Michael Steinbaugh
 }
