@@ -392,6 +392,7 @@ bcbioRNASeq <- function(
 
     # Ensure `colData` matches the colnames in `assays()`
     colData <- colData[colnames(counts), , drop = FALSE]
+    colData <- as(colData, "DataFrame")
 
     # Row data -----------------------------------------------------------------
     rowRangesMetadata <- NULL
